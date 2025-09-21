@@ -1,89 +1,87 @@
-# Challenge Dynamic Programming
+# Sprint 3 - Dynamic Programming
 
 # Participantes:
+
 # Dayana Ticona Quispe - RM 558023
 # Luiz Felipe Motta da Silva - RM 559126
 # Nicolas Lorenzo Ferreira da Silva - RM 557962
 # Pedro Henrique Faim dos Santos - RM 557440
 # Victoria Moura Miyamoto - RM 555474
 
+import bisect
 
+estoque = {
+    "seringas": 50,
+    "luvas": 100,
+    "mascaras": 200
+}
 
-from collections import deque
+fila_consumo = []
 
-# ===============================
-# Simulação de Dados de Consumo
-# ===============================
-consumos = [
-    {"insumo": "Reagente A", "quantidade": 10, "validade": "2025-10-10"},
-    {"insumo": "Reagente B", "quantidade": 5, "validade": "2025-09-20"},
-    {"insumo": "Reagente C", "quantidade": 8, "validade": "2025-09-25"},
-    {"insumo": "Reagente D", "quantidade": 12, "validade": "2025-11-01"},
-    {"insumo": "Reagente E", "quantidade": 3, "validade": "2025-09-18"},
-]
+historico = []
 
-# ===============================
-# FILA (FIFO) – Registro de consumo
-# ===============================
-def fila_consumo(consumos):
-    fila = deque()
-    for c in consumos:
-        fila.append(c)
-    return fila
+def registrar_consumo(insumo, quantidade):
+    """
+    Registra consumo no estoque, adiciona na fila e no histórico (pilha).
+    Complexidade: O(1)
+    """
+    if insumo in estoque and estoque[insumo] >= quantidade:
+        estoque[insumo] -= quantidade
+        fila_consumo.append((insumo, quantidade))  # FIFO
+        historico.append((insumo, quantidade))     # LIFO
+        print(f"Consumo registrado: {quantidade} {insumo}")
+    else:
+        print("Insumo insuficiente ou inexistente.")
 
-# ===============================
-# PILHA (LIFO) – Consultas inversas
-# ===============================
-def pilha_consumo(consumos):
-    pilha = []
-    for c in consumos:
-        pilha.append(c)
-    return pilha
+def desfazer_ultimo_consumo():
+    """
+    Desfaz última ação de consumo usando pilha (LIFO).
+    Complexidade: O(1)
+    """
+    if historico:
+        insumo, quantidade = historico.pop()
+        estoque[insumo] += quantidade
+        print(f"Último consumo desfeito: {quantidade} {insumo} devolvidos ao estoque.")
+    else:
+        print("Nenhuma ação para desfazer.")
 
-# ===============================
-# BUSCA SEQUENCIAL
-# ===============================
-def busca_sequencial(consumos, nome_insumo):
-    for c in consumos:
-        if c["insumo"] == nome_insumo:
-            return c
-    return None
+def busca_sequencial(lista, item):
+    """
+    Busca sequencial em uma lista.
+    Complexidade: O(n)
+    """
+    for i, elemento in enumerate(lista):
+        if elemento == item:
+            return i
+    return -1
 
-# ===============================
-# BUSCA BINÁRIA
-# (precisa da lista ordenada pelo nome do insumo)
-# ===============================
-def busca_binaria(consumos, nome_insumo):
-    consumos_ordenados = sorted(consumos, key=lambda x: x["insumo"])
-    esquerda, direita = 0, len(consumos_ordenados) - 1
-    while esquerda <= direita:
-        meio = (esquerda + direita) // 2
-        if consumos_ordenados[meio]["insumo"] == nome_insumo:
-            return consumos_ordenados[meio]
-        elif consumos_ordenados[meio]["insumo"] < nome_insumo:
-            esquerda = meio + 1
-        else:
-            direita = meio - 1
-    return None
+def busca_binaria(lista, item):
+    """
+    Busca binária em lista ORDENADA.
+    Complexidade: O(log n)
+    """
+    index = bisect.bisect_left(lista, item)
+    if index < len(lista) and lista[index] == item:
+        return index
+    return -1
 
-# ===============================
-# MERGE SORT
-# ===============================
-def merge_sort(lista, chave):
+def merge_sort(lista):
+    """
+    Ordenação Merge Sort.
+    Complexidade: O(n log n)
+    """
     if len(lista) <= 1:
         return lista
-
     meio = len(lista) // 2
-    esquerda = merge_sort(lista[:meio], chave)
-    direita = merge_sort(lista[meio:], chave)
+    esquerda = merge_sort(lista[:meio])
+    direita = merge_sort(lista[meio:])
+    return merge(esquerda, direita)
 
-    return merge(esquerda, direita, chave)
-
-def merge(esquerda, direita, chave):
+def merge(esquerda, direita):
     resultado = []
-    i, j = 0, 0
+    i = j = 0
     while i < len(esquerda) and j < len(direita):
-        if esquerda[i][chave] <= direita[j][chave]:
+        if esquerda[i] < direita[j]:
             resultado.append(esquerda[i])
             i += 1
         else:
@@ -93,43 +91,29 @@ def merge(esquerda, direita, chave):
     resultado.extend(direita[j:])
     return resultado
 
-# ===============================
-# QUICK SORT
-# ===============================
-def quick_sort(lista, chave):
-    if len(lista) <= 1:
-        return lista
-    pivo = lista[0]
-    menores = [x for x in lista[1:] if x[chave] <= pivo[chave]]
-    maiores = [x for x in lista[1:] if x[chave] > pivo[chave]]
-    return quick_sort(menores, chave) + [pivo] + quick_sort(maiores, chave)
+def relatorio():
+    print("\n📦 Estoque atual:")
+    for item, qtd in estoque.items():
+        print(f"- {item}: {qtd}")
 
-# ===============================
-# TESTES / DEMONSTRAÇÃO
-# ===============================
+    print("\n📜 Fila de consumo (FIFO):")
+    for c in fila_consumo:
+        print(f"- {c[1]} {c[0]}")
+
+    print("\n⏪ Histórico de consumo (Pilha/LIFO):")
+    for c in reversed(historico):
+        print(f"- {c[1]} {c[0]}")
+
 if __name__ == "__main__":
-    print("=== FILA (ordem cronológica) ===")
-    fila = fila_consumo(consumos)
-    for c in fila:
-        print(c)
+    registrar_consumo("seringas", 10)
+    registrar_consumo("luvas", 20)
+    relatorio()
 
-    print("\n=== PILHA (últimos consumos) ===")
-    pilha = pilha_consumo(consumos)
-    while pilha:
-        print(pilha.pop())
+    desfazer_ultimo_consumo()
+    relatorio()
 
-    print("\n=== BUSCA SEQUENCIAL por 'Reagente C' ===")
-    print(busca_sequencial(consumos, "Reagente C"))
-
-    print("\n=== BUSCA BINÁRIA por 'Reagente D' ===")
-    print(busca_binaria(consumos, "Reagente D"))
-
-    print("\n=== MERGE SORT por quantidade ===")
-    ordenado_merge = merge_sort(consumos, "quantidade")
-    for c in ordenado_merge:
-        print(c)
-
-    print("\n=== QUICK SORT por validade ===")
-    ordenado_quick = quick_sort(consumos, "validade")
-    for c in ordenado_quick:
-        print(c)
+    lista = [5, 2, 9, 1, 7]
+    print("\nLista original:", lista)
+    print("Merge Sort:", merge_sort(lista))
+    print("Busca sequencial (7):", busca_sequencial(lista, 7))
+    print("Busca binária (em lista ordenada) (7):", busca_binaria(sorted(lista), 7))
