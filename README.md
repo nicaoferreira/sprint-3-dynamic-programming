@@ -1,38 +1,36 @@
-# Challenge Dasa – Dynamic Programming (Python)
+# Sprint 3 - Dynamic Programming - Controle de Estoque de Insumos Médicos
 
-## 🎯 Contexto
-Este projeto foi desenvolvido como parte da disciplina **Dynamic Programming** (FIAP), em parceria com a Dasa.  
-O desafio aborda o problema de **baixa visibilidade no apontamento de consumo de insumos médicos** em unidades de diagnóstico.  
-Nosso objetivo foi simular dados de consumo e aplicar algoritmos clássicos de estruturas de dados para melhorar a gestão do estoque.
+## 📌 Descrição
+Este projeto simula um **sistema de controle de estoque** para insumos médicos, utilizando conceitos de **estrutura de dados** e **análise de algoritmos**.
 
+O sistema permite:
+- Registrar consumo de insumos (com validação de estoque);
+- Gerenciar **fila (FIFO)** e **pilha (LIFO)** de consumos;
+- Desfazer última ação de consumo com `UNDO`;
+- Realizar **busca sequencial** e **busca binária**;
+- Ordenar listas com **Merge Sort**;
+- Emitir relatórios de estoque e histórico.
 
-## ⚙️ Funcionalidades Implementadas
+---
 
-### 1. Fila (FIFO) – 30 pts
-- Registra o consumo diário em ordem cronológica.
-- Ajuda a simular como os insumos entram no controle do estoque.
+## 🚀 Tecnologias utilizadas
+- **Python 3.10+**
+- Estruturas de dados: listas, pilhas, filas
+- Algoritmos: busca sequencial, busca binária, merge sort
 
-### 2. Pilha (LIFO) – 30 pts
-- Permite consultar os consumos em ordem inversa (últimos primeiro).
-- Útil para verificar rapidamente os insumos mais recentes.
+---
 
-### 3. Estruturas de Busca – 20 pts
-- **Busca Sequencial**: percorre todos os insumos até encontrar o desejado.
-- **Busca Binária**: realiza busca eficiente, após ordenar a lista por nome.
+## ⚡ Complexidade (O grande)
+- `registrar_consumo()` → **O(1)**  
+- `desfazer_ultimo_consumo()` → **O(1)**  
+- `busca_sequencial()` → **O(n)**  
+- `busca_binaria()` → **O(log n)**  
+- `merge_sort()` → **O(n log n)**  
 
-### 4. Ordenação – 30 pts
-- **Merge Sort**: organiza os insumos por quantidade consumida.
-- **Quick Sort**: organiza os insumos por validade.
+---
 
-### 5. Relatório (README) – 20 pts
-- Explicação de como cada estrutura foi usada no contexto do problema.
-
-
-## 📊 Conclusão
-As estruturas implementadas simulam de forma prática o controle de estoque:
-- A **fila** garante o registro cronológico correto.  
-- A **pilha** auxilia na análise dos consumos mais recentes.  
-- As **buscas** permitem localizar insumos específicos.  
-- Os **algoritmos de ordenação** organizam os dados para facilitar o planejamento de reposição.  
-
-Assim, reduzimos a baixa visibilidade e aumentamos a eficiência operacional, alinhado ao desafio proposto pela **Dasa**.
+## 📜 Como executar
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/sprint-3-dynamic-programming.git
+   cd sprint-3-dynamic-programming
